@@ -73,6 +73,7 @@
 		11F533D223F1A4C0005572A1 /* AudioGraph-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				11F5340623F43F5A005572A1 /* Classes */,
 				11F533D323F1A4C0005572A1 /* AppDelegate.h */,
 				11F533D423F1A4C0005572A1 /* AppDelegate.m */,
 				11F533D623F1A4C0005572A1 /* SceneDelegate.h */,
@@ -84,7 +85,6 @@
 				11F533E123F1A4C3005572A1 /* LaunchScreen.storyboard */,
 				11F533E423F1A4C3005572A1 /* Info.plist */,
 				11F533E523F1A4C3005572A1 /* main.m */,
-				11F5340623F43F5A005572A1 /* Classes */,
 			);
 			path = "AudioGraph-iOS";
 			sourceTree = "<group>";
