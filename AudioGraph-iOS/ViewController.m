@@ -8,11 +8,21 @@
 
 #import "ViewController.h"
 #import "AudioCapture.h"
+#import "AudioFileWriter.h"
+#import "AudioSessionUtil.h"
 #import <AVFoundation/AVFoundation.h>
+#import "AudioPlayer.h"
+#import "AudioFileReader.h"
 
 
-@interface ViewController () <AudioCaptureDelegate>
+@interface ViewController () <AudioCaptureDelegate, AudioPlayerDelegate>
 @property (nonatomic, strong) AudioCapture *audioCapture;
+@property (nonatomic, strong) AudioFileWriter *fileWriter;
+
+@property (nonatomic, strong) AudioPlayer *audioPlayer;
+@property (nonatomic, strong) AudioFileReader *fileReader;
+
+
 @end
 
 
@@ -24,11 +34,38 @@
 }
 
 
+- (void)setupRecorder
+{
+    _audioCapture = [[AudioCapture alloc] initWithAudioConfig:[AudioConfig defaultAudioConfig] delegate:self];
+    _fileWriter = [[AudioFileWriter alloc] initWithInStreamDesc:_audioCapture.captureFormat];
+    [_fileWriter start];
+}
+
+
+- (void)setupPlayer
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"senorita" ofType:@"mp3"];
+    NSURL *url = [NSURL fileURLWithPath:path];
+
+    NSURL *m4aURL = [NSURL fileURLWithPath:[AudioConfig m4aPath]];
+
+    _audioPlayer = [[AudioPlayer alloc] initWithAudioConfig:[AudioConfig defaultAudioConfig] delegate:self];
+    _fileReader = [[AudioFileReader alloc] initWithFileURL:url clientFormat:_audioPlayer.playFormat];
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    [AudioSessionUtil setAudioSessionPlayAndRecord];
+
     // Do any additional setup after loading the view.
-    _audioCapture = [[AudioCapture alloc] initWithAudioConfig:[AudioConfig defaultAudioConfig] delegate:self];
+
+    //    [self setupRecorder];
+
+    [self setupPlayer];
+
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleAudioServicesReset:)
@@ -58,12 +95,43 @@
     [_audioCapture stopCapture];
 }
 
+- (IBAction)startPlay:(id)sender
+{
+    [_audioPlayer start];
+}
+- (IBAction)stopPlay:(id)sender
+{
+    [_audioPlayer stop];
+}
+
+
+#pragma mark -
+- (void)audioPlayerDidStart:(AudioPlayer *)player
+{
+}
+
+- (void)audioPlayerDidStop:(AudioPlayer *)player
+{
+}
+
+- (void)audioPlayer:(AudioPlayer *)play fillAudioBufferList:(AudioBufferList *)audioBufferList inNumberFrames:(UInt32)inNumberFrames
+{
+    BOOL eof = NO;
+    UInt32 readFrames = 0;
+    [_fileReader readFrames:inNumberFrames audioBufferList:audioBufferList bufferSize:&readFrames eof:&eof];
+    if (eof) {
+        [_audioPlayer stop];
+    }
+}
+
 
 #pragma mark -
 
 
 - (void)handleAudioServicesReset:(NSNotification *)notification
 {
+    [AudioSessionUtil setAudioSessionPlayAndRecord];
+
     [self.audioCapture handleMeidaServiesWereReset];
 }
 
@@ -132,6 +200,7 @@
 - (void)audioCapture:(AudioCapture *)capture didStopWithError:(NSError *)error
 {
     NSLog(@"%s, %@", __FUNCTION__, error);
+    [_fileWriter stop];
 }
 
 - (void)audioCapture:(AudioCapture *)capture didOccurError:(NSError *)error
@@ -139,9 +208,10 @@
     NSLog(@"%s, %@", __FUNCTION__, error);
 }
 
-- (void)audioCapture:(AudioCapture *)capture didCaptureAudioBufferList:(AudioBufferList *)audioBufferList
+- (void)audioCapture:(AudioCapture *)capture didCaptureAudioBufferList:(AudioBufferList *)audioBufferList frames:(UInt32)frames
 {
-    NSLog(@"%s", __FUNCTION__);
+    //    NSLog(@"%s", __FUNCTION__);
+    [_fileWriter writeWithAudioBufferList:audioBufferList inNumberFrames:frames];
 }
 
 @end

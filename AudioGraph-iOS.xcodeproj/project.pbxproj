@@ -18,6 +18,11 @@
 		11F533F123F1AA91005572A1 /* AudioConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F533F023F1AA91005572A1 /* AudioConfig.m */; };
 		11F533F423F1AB45005572A1 /* AudioSessionUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F533F323F1AB45005572A1 /* AudioSessionUtil.m */; };
 		11F533F723F3ED67005572A1 /* AudioStreamFormatUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F533F623F3ED67005572A1 /* AudioStreamFormatUtil.m */; };
+		864266B023FA7D8700F1138B /* senorita.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 864266AF23FA7D8700F1138B /* senorita.mp3 */; };
+		86B3E12523F9190E00191D99 /* AudioFileWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B3E12423F9190E00191D99 /* AudioFileWriter.m */; };
+		86B3E12823F947B800191D99 /* AudioFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B3E12723F947B800191D99 /* AudioFileReader.m */; };
+		86B3E12B23F9481B00191D99 /* AudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B3E12A23F9481B00191D99 /* AudioPlayer.m */; };
+		86B3E12E23F961D400191D99 /* MultiChannelAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B3E12D23F961D400191D99 /* MultiChannelAudioPlayer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +46,15 @@
 		11F533F323F1AB45005572A1 /* AudioSessionUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioSessionUtil.m; sourceTree = "<group>"; };
 		11F533F523F3ED67005572A1 /* AudioStreamFormatUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioStreamFormatUtil.h; sourceTree = "<group>"; };
 		11F533F623F3ED67005572A1 /* AudioStreamFormatUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioStreamFormatUtil.m; sourceTree = "<group>"; };
+		864266AF23FA7D8700F1138B /* senorita.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = senorita.mp3; sourceTree = "<group>"; };
+		86B3E12323F9190E00191D99 /* AudioFileWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioFileWriter.h; sourceTree = "<group>"; };
+		86B3E12423F9190E00191D99 /* AudioFileWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioFileWriter.m; sourceTree = "<group>"; };
+		86B3E12623F947B800191D99 /* AudioFileReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioFileReader.h; sourceTree = "<group>"; };
+		86B3E12723F947B800191D99 /* AudioFileReader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioFileReader.m; sourceTree = "<group>"; };
+		86B3E12923F9481B00191D99 /* AudioPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioPlayer.h; sourceTree = "<group>"; };
+		86B3E12A23F9481B00191D99 /* AudioPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioPlayer.m; sourceTree = "<group>"; };
+		86B3E12C23F961D400191D99 /* MultiChannelAudioPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MultiChannelAudioPlayer.h; sourceTree = "<group>"; };
+		86B3E12D23F961D400191D99 /* MultiChannelAudioPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MultiChannelAudioPlayer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +95,7 @@
 				11F533D923F1A4C0005572A1 /* ViewController.h */,
 				11F533DA23F1A4C0005572A1 /* ViewController.m */,
 				11F533DC23F1A4C0005572A1 /* Main.storyboard */,
+				864266AE23FA7D1200F1138B /* Resources */,
 				11F533DF23F1A4C3005572A1 /* Assets.xcassets */,
 				11F533E123F1A4C3005572A1 /* LaunchScreen.storyboard */,
 				11F533E423F1A4C3005572A1 /* Info.plist */,
@@ -100,8 +115,24 @@
 				11F533ED23F1A4D8005572A1 /* AudioCapture.m */,
 				11F533F523F3ED67005572A1 /* AudioStreamFormatUtil.h */,
 				11F533F623F3ED67005572A1 /* AudioStreamFormatUtil.m */,
+				86B3E12323F9190E00191D99 /* AudioFileWriter.h */,
+				86B3E12423F9190E00191D99 /* AudioFileWriter.m */,
+				86B3E12623F947B800191D99 /* AudioFileReader.h */,
+				86B3E12723F947B800191D99 /* AudioFileReader.m */,
+				86B3E12923F9481B00191D99 /* AudioPlayer.h */,
+				86B3E12A23F9481B00191D99 /* AudioPlayer.m */,
+				86B3E12C23F961D400191D99 /* MultiChannelAudioPlayer.h */,
+				86B3E12D23F961D400191D99 /* MultiChannelAudioPlayer.m */,
 			);
 			path = Classes;
+			sourceTree = "<group>";
+		};
+		864266AE23FA7D1200F1138B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				864266AF23FA7D8700F1138B /* senorita.mp3 */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -164,6 +195,7 @@
 				11F533E323F1A4C3005572A1 /* LaunchScreen.storyboard in Resources */,
 				11F533E023F1A4C3005572A1 /* Assets.xcassets in Resources */,
 				11F533DE23F1A4C0005572A1 /* Main.storyboard in Resources */,
+				864266B023FA7D8700F1138B /* senorita.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,8 +208,12 @@
 			files = (
 				11F533F423F1AB45005572A1 /* AudioSessionUtil.m in Sources */,
 				11F533DB23F1A4C0005572A1 /* ViewController.m in Sources */,
+				86B3E12523F9190E00191D99 /* AudioFileWriter.m in Sources */,
+				86B3E12E23F961D400191D99 /* MultiChannelAudioPlayer.m in Sources */,
 				11F533D523F1A4C0005572A1 /* AppDelegate.m in Sources */,
+				86B3E12B23F9481B00191D99 /* AudioPlayer.m in Sources */,
 				11F533E623F1A4C3005572A1 /* main.m in Sources */,
+				86B3E12823F947B800191D99 /* AudioFileReader.m in Sources */,
 				11F533D823F1A4C0005572A1 /* SceneDelegate.m in Sources */,
 				11F533F123F1AA91005572A1 /* AudioConfig.m in Sources */,
 				11F533EE23F1A4D8005572A1 /* AudioCapture.m in Sources */,

@@ -8,6 +8,7 @@
 
 #import "AudioConfig.h"
 
+
 @implementation AudioConfig
 + (AudioConfig *)defaultAudioConfig
 {
@@ -17,4 +18,18 @@
     config.ioBufferDuration = 0.02;
     return config;
 }
+@end
+
+
+@implementation AudioConfig (AudioFilePath)
+
++ (NSString *)m4aPath
+{
+    NSString *fileName = @"audio.m4a";
+    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
+    NSLog(@"path = %@", path);
+    return [path stringByAppendingPathComponent:fileName];
+}
+
+
 @end

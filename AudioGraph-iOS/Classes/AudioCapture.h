@@ -28,7 +28,7 @@ typedef NS_ENUM(NSUInteger, AudioCaptureErrorCode) {
 
 
 @class AudioCapture;
-@protocol AudioCaptureDelegate<NSObject>
+@protocol AudioCaptureDelegate <NSObject>
 @optional
 
 
@@ -41,7 +41,7 @@ typedef NS_ENUM(NSUInteger, AudioCaptureErrorCode) {
 /// 调用start结果回调
 /// @param capture AudioCapture
 /// @param error 正常开始 error = nil, 开启失败，包含错误信息
-- (void)audioCapture:(AudioCapture *)capture didStartWithError:(NSError * _Nullable)error;
+- (void)audioCapture:(AudioCapture *)capture didStartWithError:(NSError *_Nullable)error;
 
 
 /// 调用stop结果回调
@@ -53,17 +53,18 @@ typedef NS_ENUM(NSUInteger, AudioCaptureErrorCode) {
 /// 录制的数据回调，每产生一次数据回调一次
 /// @param capture AudioCapture
 /// @param audioBufferList AudioBufferList
-- (void)audioCapture:(AudioCapture *)capture didCaptureAudioBufferList:(AudioBufferList *)audioBufferList;
+- (void)audioCapture:(AudioCapture *)capture didCaptureAudioBufferList:(AudioBufferList *)audioBufferList frames:(UInt32)frames;
 
 @end
 
 
 @interface AudioCapture : NSObject
 
-@property (nonatomic, weak) id<AudioCaptureDelegate>delegate;
+@property (nonatomic, weak) id<AudioCaptureDelegate> delegate;
+@property (nonatomic, readonly) AudioStreamBasicDescription captureFormat;
+
 
 - (instancetype)initWithAudioConfig:(AudioConfig *)config delegate:(id<AudioCaptureDelegate>)delegate;
-
 - (void)startCapture;
 - (void)stopCapture;
 - (BOOL)isRunning;

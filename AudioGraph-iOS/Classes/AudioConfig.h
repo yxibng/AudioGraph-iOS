@@ -7,8 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AudioToolbox/AudioToolbox.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+#define kInputBus 1
+#define kOutputBus 0
+
+
+typedef struct {
+    AudioUnit unit;
+    AUNode node;
+} AudioNodeInfo;
+
 
 @interface AudioConfig : NSObject
 
@@ -25,5 +36,12 @@ NS_ASSUME_NONNULL_BEGIN
 + (AudioConfig *)defaultAudioConfig;
 
 @end
+
+
+@interface AudioConfig (AudioFilePath)
++ (NSString *)m4aPath;
+
+@end
+
 
 NS_ASSUME_NONNULL_END

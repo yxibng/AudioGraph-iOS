@@ -8,17 +8,7 @@
 
 #import "AudioCapture.h"
 #import <AVFoundation/AVFoundation.h>
-#import "AudioSessionUtil.h"
 #import "AudioStreamFormatUtil.h"
-
-#define kInputBus 1
-#define kOutputBus 0
-
-
-typedef struct {
-    AudioUnit unit;
-    AUNode node;
-} AudioNodeInfo;
 
 
 @interface AudioCapture ()
@@ -54,8 +44,6 @@ typedef struct {
         _config = config;
         _delegate = delegate;
 
-        //设置session
-        [AudioSessionUtil setAudioSessionRecord];
         //设置IO频率，越小，实时性越强
         [[AVAudioSession sharedInstance] setPreferredIOBufferDuration:config.ioBufferDuration error:NULL];
         //设置采样率
@@ -328,8 +316,6 @@ typedef struct {
 
 - (void)handleMeidaServiesWereReset
 {
-    [AudioSessionUtil setAudioSessionRecord];
-
     AUGraphClose(_graph);
     AUGraphUninitialize(_graph);
     DisposeAUGraph(_graph);
@@ -371,8 +357,8 @@ OSStatus inputRenderCallback(void *inRefCon,
                                       recorder.audioBufferList);
 
     if (status == noErr) {
-        if ([recorder.delegate respondsToSelector:@selector(audioCapture:didCaptureAudioBufferList:)]) {
-            [recorder.delegate audioCapture:recorder didCaptureAudioBufferList:recorder.audioBufferList];
+        if ([recorder.delegate respondsToSelector:@selector(audioCapture:didCaptureAudioBufferList:frames:)]) {
+            [recorder.delegate audioCapture:recorder didCaptureAudioBufferList:recorder.audioBufferList frames:inNumberFrames];
         }
     } else {
         //handle error
