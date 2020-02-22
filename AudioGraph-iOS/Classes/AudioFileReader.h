@@ -16,6 +16,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithFileURL:(NSURL *)URL clientFormat:(AudioStreamBasicDescription)clientFormat;
 
+/*
+ 获取元数据,
+ Provides a dictionary containing the metadata (ID3) tags that are included in the header for the audio file.
+ Typically this contains stuff like artist, title, release year, etc.
+ */
+- (NSDictionary *)metaData;
+
 
 - (void)start;
 - (void)stop;

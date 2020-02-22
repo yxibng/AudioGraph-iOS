@@ -47,10 +47,10 @@
     NSString *path = [[NSBundle mainBundle] pathForResource:@"senorita" ofType:@"mp3"];
     NSURL *url = [NSURL fileURLWithPath:path];
 
-    NSURL *m4aURL = [NSURL fileURLWithPath:[AudioConfig m4aPath]];
-
     _audioPlayer = [[AudioPlayer alloc] initWithAudioConfig:[AudioConfig defaultAudioConfig] delegate:self];
     _fileReader = [[AudioFileReader alloc] initWithFileURL:url clientFormat:_audioPlayer.playFormat];
+    NSDictionary *metaData = [self.fileReader metaData];
+    NSLog(@"metaData = %@", metaData);
 }
 
 

@@ -111,6 +111,28 @@ typedef struct {
 }
 
 
+- (NSDictionary *)metaData
+{
+    // get size of metadata property (dictionary)
+    UInt32 propSize = sizeof(self.audioFileInfo.audioFileID);
+    CFDictionaryRef metadata;
+    UInt32 writable;
+    OSStatus status = AudioFileGetPropertyInfo(self.audioFileInfo.audioFileID,
+                                               kAudioFilePropertyInfoDictionary,
+                                               &propSize,
+                                               &writable);
+    assert(status == noErr);
+    // pull metadata
+    status = AudioFileGetProperty(self.audioFileInfo.audioFileID,
+                                  kAudioFilePropertyInfoDictionary,
+                                  &propSize,
+                                  &metadata);
+    assert(status == noErr);
+    // cast to NSDictionary
+    return (__bridge NSDictionary *)metadata;
+}
+
+
 - (void)readFrames:(UInt32)frames audioBufferList:(AudioBufferList *)audioBufferList bufferSize:(UInt32 *)bufferSize eof:(BOOL *)eof
 {
     if (_audioFileInfo.closed) {
