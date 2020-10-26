@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BOOL)isInterleaved:(AudioStreamBasicDescription)asbd;
 
++ (BOOL)isFloatFormat:(AudioStreamBasicDescription)asbd;
 
 /// 创建一个float 类型的音频描述
 /// @param channels 声道数目： 1 单声道  2 双声道
@@ -44,6 +45,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 释放AudioBufferList
 /// @param bufferList 需要释放的AudioBufferList
 + (void)freeAudioBufferList:(AudioBufferList *)bufferList;
+
+
++ (NSString *)stringForAudioStreamBasicDescription:(AudioStreamBasicDescription)asbd;
 
 @end
 

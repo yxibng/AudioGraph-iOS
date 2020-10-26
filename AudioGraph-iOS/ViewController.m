@@ -31,6 +31,7 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[AVAudioSession sharedInstance] removeObserver:self forKeyPath:@"category"];
 }
 
 
@@ -65,7 +66,10 @@
     //    [self setupRecorder];
 
     [self setupPlayer];
-
+    
+    
+    
+    [[AVAudioSession sharedInstance] addObserver:self forKeyPath:@"category" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionInitial context:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleAudioServicesReset:)
@@ -82,6 +86,11 @@
                                              selector:@selector(handleAudioSessionRouteChange:)
                                                  name:AVAudioSessionRouteChangeNotification
                                                object:nil];
+}
+
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary<NSKeyValueChangeKey, id> *)change context:(nullable void *)context {
+    //监听category的变化
+
 }
 
 
@@ -104,6 +113,9 @@
     [_audioPlayer stop];
 }
 
+- (IBAction)routeToSpeaker:(id)sender {
+    [AudioSessionUtil setRouteToSpeaker];
+}
 
 #pragma mark -
 - (void)audioPlayerDidStart:(AudioPlayer *)player
@@ -140,13 +152,15 @@
 {
     int type = [notification.userInfo[AVAudioSessionInterruptionTypeKey] intValue];
     if (AVAudioSessionInterruptionTypeBegan == type) {
+        [self.audioPlayer stop];
         [self.audioCapture stopCapture];
     } else if (AVAudioSessionInterruptionTypeEnded == type) {
         NSDictionary *userInfo = notification.userInfo;
         NSNumber *shouldResume = userInfo[AVAudioSessionInterruptionOptionKey];
         if (shouldResume.integerValue == AVAudioSessionInterruptionOptionShouldResume) {
-            [self.audioCapture startCapture];
+            [self.audioPlayer start];
         }
+        [self.audioCapture startCapture];
     }
 }
 
@@ -154,7 +168,18 @@
 {
     NSDictionary *userInfo = notification.userInfo;
     NSNumber *reason = userInfo[AVAudioSessionRouteChangeReasonKey];
-
+    for (AVAudioSessionPortDescription *output in [AVAudioSession sharedInstance].currentRoute.outputs) {
+        NSLog(@"port = %@, type = %@",output.portName, output.portType);
+        
+        if ([output.portType isEqualToString:AVAudioSessionPortBuiltInSpeaker]) {
+            NSLog(@"=========");
+        }
+        
+    }
+    return;
+    
+    
+    
     switch (reason.integerValue) {
         case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
             //new device connect

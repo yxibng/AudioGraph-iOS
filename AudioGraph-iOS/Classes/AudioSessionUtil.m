@@ -94,11 +94,10 @@
 + (BOOL)setRouteToSpeaker
 {
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    BOOL ok = YES;
-
     NSError *error;
-    if (audioSession.category == AVAudioSessionCategoryPlayAndRecord && ![self isHeadsetPluggedIn]) {
-        ok = [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
+    BOOL ok = [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
+    if (error) {
+        NSLog(@"error =%@", error);
     }
     return ok;
 }

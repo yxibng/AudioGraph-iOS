@@ -7,6 +7,7 @@
 //
 
 #import "AudioStreamFormatUtil.h"
+#import <AVFoundation/AVFoundation.h>
 
 @implementation AudioStreamFormatUtil
 
@@ -15,63 +16,31 @@
     return !(asbd.mFormatFlags & kAudioFormatFlagIsNonInterleaved);
 }
 
++ (BOOL)isFloatFormat:(AudioStreamBasicDescription)asbd
+{
+    return asbd.mFormatFlags & kAudioFormatFlagIsFloat;
+}
+
 
 + (AudioStreamBasicDescription)floatFormatWithNumberOfChannels:(UInt32)channels
                                                     sampleRate:(float)sampleRate
                                                  isInterleaved:(BOOL)isInterleaved
 {
-    AudioStreamBasicDescription asbd;
-    UInt32 floatByteSize = sizeof(float);
-    asbd.mChannelsPerFrame = channels;
-    asbd.mBitsPerChannel = 8 * floatByteSize;
-    if (isInterleaved) {
-        asbd.mBytesPerFrame = asbd.mChannelsPerFrame * floatByteSize;
-    } else {
-        asbd.mBytesPerFrame = floatByteSize;
-    }
-
-    asbd.mFramesPerPacket = 1;
-    asbd.mBytesPerPacket = asbd.mFramesPerPacket * asbd.mBytesPerFrame;
-
-    if (isInterleaved) {
-        asbd.mFormatFlags = kAudioFormatFlagIsFloat | kAudioFormatFlagIsPacked;
-    } else {
-        asbd.mFormatFlags = kAudioFormatFlagIsFloat | kAudioFormatFlagIsNonInterleaved;
-    }
-
-    asbd.mFormatID = kAudioFormatLinearPCM;
-    asbd.mSampleRate = sampleRate;
-    asbd.mReserved = 0;
-    return asbd;
+    AVAudioFormat *format = [[AVAudioFormat alloc] initWithCommonFormat:AVAudioPCMFormatFloat32 sampleRate:sampleRate channels:channels interleaved:isInterleaved];
+    AudioStreamBasicDescription desc = *format.streamDescription;
+    format = nil;
+    return desc;
 }
 
 + (AudioStreamBasicDescription)intFormatWithNumberOfChannels:(UInt32)channels
                                                   sampleRate:(float)sampleRate
                                                isInterleaved:(BOOL)isInterleaved
 {
-    AudioStreamBasicDescription asbd;
-    UInt32 byteSize = 2;
-    asbd.mChannelsPerFrame = channels;
-    asbd.mBitsPerChannel = 8 * byteSize;
-    if (isInterleaved) {
-        asbd.mBytesPerFrame = asbd.mChannelsPerFrame * byteSize;
-    } else {
-        asbd.mBytesPerFrame = byteSize;
-    }
-
-    asbd.mFramesPerPacket = 1;
-    asbd.mBytesPerPacket = asbd.mFramesPerPacket * asbd.mBytesPerFrame;
-
-    if (isInterleaved) {
-        asbd.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
-    } else {
-        asbd.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsNonInterleaved;
-    }
-
-    asbd.mFormatID = kAudioFormatLinearPCM;
-    asbd.mSampleRate = sampleRate;
-    asbd.mReserved = 0;
-    return asbd;
+    
+    AVAudioFormat *format = [[AVAudioFormat alloc] initWithCommonFormat:AVAudioPCMFormatInt16 sampleRate:sampleRate channels:channels interleaved:isInterleaved];
+    AudioStreamBasicDescription desc = *format.streamDescription;
+    format = nil;
+    return desc;
 }
 
 + (AudioBufferList *)audioBufferListWithNumberOfFrames:(UInt32)frames
@@ -120,6 +89,32 @@
     bufferList = NULL;
 }
 
-
-
++ (NSString *)stringForAudioStreamBasicDescription:(AudioStreamBasicDescription)asbd
+{
+    char formatIDString[5];
+    UInt32 formatID = CFSwapInt32HostToBig(asbd.mFormatID);
+    bcopy (&formatID, formatIDString, 4);
+    formatIDString[4] = '\0';
+    return [NSString stringWithFormat:
+            @"\nSample Rate:       %10.0f,\n"
+            @"Format ID:           %10s,\n"
+            @"Format Flags:        %10X,\n"
+            @"Bytes per Packet:    %10d,\n"
+            @"Frames per Packet:   %10d,\n"
+            @"Bytes per Frame:     %10d,\n"
+            @"Channels per Frame:  %10d,\n"
+            @"Bits per Channel:    %10d,\n"
+            @"IsInterleaved:       %i,\n"
+            @"IsFloat:             %i,",
+            asbd.mSampleRate,
+            formatIDString,
+            (unsigned int)asbd.mFormatFlags,
+            (unsigned int)asbd.mBytesPerPacket,
+            (unsigned int)asbd.mFramesPerPacket,
+            (unsigned int)asbd.mBytesPerFrame,
+            (unsigned int)asbd.mChannelsPerFrame,
+            (unsigned int)asbd.mBitsPerChannel,
+            [self isInterleaved:asbd],
+            [self isFloatFormat:asbd]];
+}
 @end
