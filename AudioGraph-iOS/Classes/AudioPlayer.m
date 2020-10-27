@@ -216,6 +216,12 @@
     }
     return isRunning;
 }
+
+
+- (void)handleMeidaServiesWereReset {
+    [self setup];
+}
+
 static OSStatus playbackCallback(void *inRefCon,
                                  AudioUnitRenderActionFlags *ioActionFlags,
                                  const AudioTimeStamp *inTimeStamp,

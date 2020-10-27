@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)start;
 - (void)stop;
 - (BOOL)isRunning;
+- (void)handleMeidaServiesWereReset;
 @end
 
 NS_ASSUME_NONNULL_END

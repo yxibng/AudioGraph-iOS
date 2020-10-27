@@ -14,6 +14,10 @@
 #import "AudioPlayer.h"
 #import "AudioFileReader.h"
 
+typedef enum : NSUInteger {
+    AudioTypeRecording,
+    AudioTypePlayback
+} AudioType;
 
 @interface ViewController () <AudioCaptureDelegate, AudioPlayerDelegate>
 @property (nonatomic, strong) AudioCapture *audioCapture;
@@ -22,6 +26,7 @@
 @property (nonatomic, strong) AudioPlayer *audioPlayer;
 @property (nonatomic, strong) AudioFileReader *fileReader;
 
+@property (nonatomic, assign) AudioType audioType;
 
 @end
 
@@ -61,15 +66,16 @@
 
     [AudioSessionUtil setAudioSessionPlayAndRecord];
 
-    // Do any additional setup after loading the view.
-
-    //    [self setupRecorder];
-
-    [self setupPlayer];
-    
-    
-    
     [[AVAudioSession sharedInstance] addObserver:self forKeyPath:@"category" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionInitial context:nil];
+
+    _audioType = AudioTypeRecording;
+    if (_audioType == AudioTypeRecording) {
+        [self setupRecorder];
+    } else {
+        [self setupPlayer];
+    }
+
+
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleAudioServicesReset:)
@@ -144,23 +150,35 @@
 {
     [AudioSessionUtil setAudioSessionPlayAndRecord];
 
-    [self.audioCapture handleMeidaServiesWereReset];
+    if (self.audioType == AudioTypeRecording) {
+        [self.audioCapture handleMeidaServiesWereReset];
+    } else {
+        [self.audioPlayer handleMeidaServiesWereReset];
+    }
+
 }
 
 
 - (void)handleAudioSessionInterruption:(NSNotification *)notification
 {
+    
+    NSLog(@"%s,notification = %@",__FUNCTION__,notification);
+    
     int type = [notification.userInfo[AVAudioSessionInterruptionTypeKey] intValue];
     if (AVAudioSessionInterruptionTypeBegan == type) {
-        [self.audioPlayer stop];
-        [self.audioCapture stopCapture];
+        if (self.audioType == AudioTypeRecording) {
+            [self.audioCapture stopCapture];
+        } else {
+            [self.audioPlayer stop];
+        }
     } else if (AVAudioSessionInterruptionTypeEnded == type) {
         NSDictionary *userInfo = notification.userInfo;
         NSNumber *shouldResume = userInfo[AVAudioSessionInterruptionOptionKey];
-        if (shouldResume.integerValue == AVAudioSessionInterruptionOptionShouldResume) {
+        if (self.audioType == AudioTypePlayback && shouldResume.integerValue == AVAudioSessionInterruptionOptionShouldResume) {
             [self.audioPlayer start];
+        } else {
+            [self.audioCapture startCapture];
         }
-        [self.audioCapture startCapture];
     }
 }
 
@@ -235,7 +253,7 @@
 
 - (void)audioCapture:(AudioCapture *)capture didCaptureAudioBufferList:(AudioBufferList *)audioBufferList frames:(UInt32)frames
 {
-    //    NSLog(@"%s", __FUNCTION__);
+        NSLog(@"%s", __FUNCTION__);
     [_fileWriter writeWithAudioBufferList:audioBufferList inNumberFrames:frames];
 }
 
